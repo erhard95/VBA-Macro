@@ -1,0 +1,30 @@
+Option Explicit
+Sub Zero()
+    First
+    Second
+    Third
+End Sub
+Sub First()
+ActiveWorkbook.Worksheets("Sheet1").Range("L1").Value = "Lookup"
+ActiveWorkbook.Worksheets("Sheet1").Range("L2").Formula = "=VLOOKUP(A2,Sheet2!A:A,1,0)"
+ActiveWorkbook.Worksheets("Sheet1").Range("L2").AutoFill Destination:=Range("L2:L" & Range("A" & Rows.Count).End(xlUp).Row)
+End Sub
+Sub Second()
+ActiveWorkbook.Worksheets("Sheet1").Select
+With ActiveSheet
+    .AutoFilterMode = False
+    With Range("L1", Range("L" & Rows.Count).End(xlUp))
+        .AutoFilter 1, "#N/A"
+        On Error Resume Next
+        .Offset(1).SpecialCells(12).EntireRow.Delete
+    End With
+    .AutoFilterMode = False
+End With
+End Sub
+Sub Third()
+ActiveWorkbook.Worksheets("Sheet1").Columns("L").EntireColumn.Delete
+Application.DisplayAlerts = False
+ActiveWorkbook.Worksheets("Sheet2").Delete
+Application.DisplayAlerts = True
+ActiveWorkbook.Close SaveChanges:=True
+End Sub
